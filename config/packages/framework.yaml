@@ -17,6 +17,11 @@ framework:
     php_errors:
         log: true
 
+    http_client:
+      scoped_clients:
+        weather_data.client:
+          base_uri: '%env(WEATHER_API)%'
+
 when@test:
     framework:
         test: true
