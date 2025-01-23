@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      context: .docker
+      target: dev
+      dockerfile: images/server/Dockerfile
+      args:
+        BASE_IMAGE: php:8.3-cli
+    entrypoint: ["tail", "-f", "/dev/null"]
+    volumes:
+      - ./:/srv/app/
