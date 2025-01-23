@@ -1,0 +1,9 @@
+framework:
+  notifier:
+    message_bus: false
+    chatter_transports:
+      fakechat+email: '%env(FAKE_CHAT_DSN)%'
+    texter_transports:
+      fakesms+email: '%env(FAKE_SMS_DSN)%'
+    admin_recipients:
+      - { email: admin@example.com }

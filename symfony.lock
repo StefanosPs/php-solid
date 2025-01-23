@@ -35,6 +35,24 @@
             "bin/console"
         ]
     },
+    "symfony/fake-chat-notifier": {
+        "version": "6.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.3",
+            "ref": "7ac8dfaa8bfb66c21ab127e4e5f31bca8df18dfb"
+        }
+    },
+    "symfony/fake-sms-notifier": {
+        "version": "6.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.3",
+            "ref": "b5809b9a44a5deb1b2df8654697756e8e73b7606"
+        }
+    },
     "symfony/flex": {
         "version": "2.4",
         "recipe": {
@@ -87,6 +105,18 @@
             "version": "1.0",
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
+    },
+    "symfony/notifier": {
+        "version": "6.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.0",
+            "ref": "178877daf79d2dbd62129dd03612cb1a2cb407cc"
+        },
+        "files": [
+            "config/packages/notifier.yaml"
+        ]
     },
     "symfony/routing": {
         "version": "6.4",
