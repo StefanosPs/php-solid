@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Notifier;
 
 use App\Exceptions\Notification\MailerNotificationException;
-use App\Exceptions\Notification\NotificationExceptionInterface;
 use App\Service\Mailer\MailerService;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
@@ -16,9 +15,6 @@ class EmailNotifier implements NotifierInterface
     ) {
     }
 
-    /**
-     * @throws NotificationExceptionInterface
-     */
     public function notify(): void
     {
         try {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Notifier;
 
 use App\Exceptions\Notification\ChatNotificationException;
-use App\Exceptions\Notification\NotificationExceptionInterface;
 use App\Service\Sms\SmsService;
 use Symfony\Component\Notifier\Exception\TransportExceptionInterface;
 
@@ -16,9 +15,6 @@ class SmsNotifier implements NotifierInterface
     ) {
     }
 
-    /**
-     * @throws NotificationExceptionInterface
-     */
     public function notify(): void
     {
 
