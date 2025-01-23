@@ -46,3 +46,8 @@ tools/cs-fix:  ## run cs fixer (PHP Coding Standards Fixer)
 
 tools/stan:  ## run cs fixer (PHP Coding Standards Fixer)
 	$(COMPOSER) run stan
+
+## —— Custom command  ———————————————————————————————————————————————————————————
+
+custom/run:
+	$(SYMFONY) app:weather-info Cholargos
