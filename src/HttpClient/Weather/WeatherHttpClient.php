@@ -7,6 +7,7 @@ namespace App\HttpClient\Weather;
 use App\Dto\Weather\ReportWeatherDto;
 use App\Factory\WeatherHttpClientResponseFactory;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class WeatherHttpClient
@@ -28,6 +29,7 @@ class WeatherHttpClient
         private readonly WeatherHttpClientResponseFactory $clientResponseFactory,
     ) {
     }
+
 
     public function get(string $city): ReportWeatherDto
     {

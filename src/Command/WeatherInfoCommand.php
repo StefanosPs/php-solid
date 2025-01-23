@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Handler\WeatherInfoCommandResultsHandler;
 use App\HttpClient\Weather\WeatherHttpClient;
 use App\Service\Mailer\MailerService;
+use App\Service\WeatherInfo\WeatherInfoServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,7 +22,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class WeatherInfoCommand extends Command
 {
     public function __construct(
-        private readonly WeatherHttpClient $weatherHttpClient,
+        private readonly WeatherInfoServiceInterface $weatherInfo,
         private readonly MailerService $mailerService,
         private readonly WeatherInfoCommandResultsHandler $resultsHandler,
     ) {
@@ -51,7 +52,7 @@ class WeatherInfoCommand extends Command
 
         $this->mailerService->commandStarted($city);
 
-        $dayWeatherDto = $this->weatherHttpClient->get($city);
+        $dayWeatherDto = $this->weatherInfo->get($city);
         $this->resultsHandler->handle($dayWeatherDto);
 
         $io->info(
