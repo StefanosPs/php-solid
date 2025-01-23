@@ -14,4 +14,6 @@ interface NotifierInterface
      * @throws NotificationExceptionInterface
      */
     public function notify(): void;
+
+    public function supports(): bool;
 }

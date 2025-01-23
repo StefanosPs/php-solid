@@ -38,7 +38,9 @@ class WeatherInfoCommandResultsHandler
 
         foreach ($this->notifiers as $notifier) {
             try {
-                $notifier->notify();
+                if ($notifier->supports()) {
+                    $notifier->notify();
+                }
             } catch (NotificationExceptionInterface $exception) {
                 $this->logger->error('Fail to execute notification', ['exception' => $exception]);
                 continue;

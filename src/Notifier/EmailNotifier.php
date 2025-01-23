@@ -24,4 +24,9 @@ class EmailNotifier implements NotifierInterface
         }
 
     }
+
+    public function supports(): bool
+    {
+        return true;
+    }
 }
