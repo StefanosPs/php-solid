@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Handler\WeatherInfoCommandResultsHandler;
 use App\HttpClient\Weather\WeatherHttpClient;
 use App\Service\Mailer\MailerService;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -22,6 +23,7 @@ class WeatherInfoCommand extends Command
     public function __construct(
         private readonly WeatherHttpClient $weatherHttpClient,
         private readonly MailerService $mailerService,
+        private readonly WeatherInfoCommandResultsHandler $resultsHandler,
     ) {
         parent::__construct();
     }
@@ -50,16 +52,13 @@ class WeatherInfoCommand extends Command
         $this->mailerService->commandStarted($city);
 
         $dayWeatherDto = $this->weatherHttpClient->get($city);
-        $minTemperature = $dayWeatherDto->dayWeatherCollection->getMinTemperature();
-        if ($minTemperature < 10) {
-            $this->mailerService->lowTemperature();
-        }
+        $this->resultsHandler->handle($dayWeatherDto);
 
         $io->info(
             \sprintf(
                 'The low temperature for city %s is %sC',
-                $city,
-                $minTemperature,
+                $dayWeatherDto->resolvedAddress,
+                $dayWeatherDto->dayWeatherCollection->getMinTemperature(),
             )
         );
 
