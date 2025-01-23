@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\HttpClient\Weather\WeatherHttpClient;
+use App\Service\Mailer\MailerService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
 
 #[AsCommand(
     name: 'app:weather-info',
@@ -23,7 +21,7 @@ class WeatherInfoCommand extends Command
 {
     public function __construct(
         private readonly WeatherHttpClient $weatherHttpClient,
-        private readonly MailerInterface $mailer,
+        private readonly MailerService $mailerService,
     ) {
         parent::__construct();
     }
@@ -49,26 +47,12 @@ class WeatherInfoCommand extends Command
             return Command::FAILURE;
         }
 
-        $mail = (new Email())
-            ->to(new Address('mother@example.com'))
-            ->subject('Command started')
-            ->text(\sprintf('Command started for city %s', $city))
-        ;
-        $this->mailer->send(
-            $mail
-        );
+        $this->mailerService->commandStarted($city);
 
         $dayWeatherDto = $this->weatherHttpClient->get($city);
         $minTemperature = $dayWeatherDto->dayWeatherCollection->getMinTemperature();
         if ($minTemperature < 10) {
-            $mail = (new Email())
-                ->to(new Address('child@example.com'))
-                ->subject('Low Temperature Alarm')
-                ->text('Don\'t Forget Your Jacket!')
-            ;
-            $this->mailer->send(
-                $mail
-            );
+            $this->mailerService->lowTemperature();
         }
 
         $io->info(
