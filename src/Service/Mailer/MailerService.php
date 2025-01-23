@@ -31,6 +31,9 @@ readonly class MailerService
         );
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     public function lowTemperature(): void
     {
         $mail = (new Email())
