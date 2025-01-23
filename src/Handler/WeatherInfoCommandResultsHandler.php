@@ -6,6 +6,7 @@ namespace App\Handler;
 
 use App\Dto\Weather\ReportWeatherDto;
 use App\Exceptions\Notification\NotificationExceptionInterface;
+use App\Notifier\DynamicNotifierInterface;
 use App\Notifier\NotifierInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
@@ -15,11 +16,14 @@ class WeatherInfoCommandResultsHandler
     private const int LOW_TEMPERATURE_LIMIT = 10;
 
     /**
-     * @param NotifierInterface[] $notifiers
+     * @param NotifierInterface[]        $notifierInterface
+     * @param DynamicNotifierInterface[] $dynamicNotifierInterface
      */
     public function __construct(
         #[AutowireIterator(NotifierInterface::class)]
-        private iterable $notifiers,
+        private iterable $notifierInterface,
+        #[AutowireIterator(DynamicNotifierInterface::class)]
+        private iterable $dynamicNotifierInterface,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -35,17 +39,35 @@ class WeatherInfoCommandResultsHandler
 
     private function lowTemperatureNotify(): void
     {
+        $this->triggerNotifiers();
 
-        foreach ($this->notifiers as $notifier) {
+        $this->triggerDynamicNotifiers();
+    }
+
+    private function triggerNotifiers(): void
+    {
+        foreach ($this->notifierInterface as $notifier) {
             try {
-                if ($notifier->supports()) {
-                    $notifier->notify();
-                }
+                $notifier->notify();
             } catch (NotificationExceptionInterface $exception) {
                 $this->logger->error('Fail to execute notification', ['exception' => $exception]);
                 continue;
             }
 
+        }
+    }
+
+    private function triggerDynamicNotifiers(): void
+    {
+        foreach ($this->dynamicNotifierInterface as $notifier) {
+            if ($notifier->supports()) {
+                try {
+                    $notifier->notify();
+                } catch (NotificationExceptionInterface $exception) {
+                    $this->logger->error('Fail to execute notification', ['exception' => $exception]);
+                    continue;
+                }
+            }
         }
     }
 }

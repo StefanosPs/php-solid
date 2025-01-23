@@ -24,9 +24,4 @@ class SmsNotifier implements NotifierInterface
             throw new ChatNotificationException('Fail to send notification via email', $e->getCode(), $e);
         }
     }
-
-    public function supports(): bool
-    {
-        return true;
-    }
 }

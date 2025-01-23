@@ -7,7 +7,7 @@ namespace App\Notifier;
 use App\Enum\HeatingStatusEnum;
 use App\Service\Heating\HeatingService;
 
-class TurnOnTheHeatingNotifier implements NotifierInterface
+class TurnOnTheHeatingNotifier implements DynamicNotifierInterface
 {
     public function __construct(
         private readonly HeatingService $heatingService

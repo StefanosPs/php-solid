@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Notifier;
 
 use App\Exceptions\Notification\NotificationExceptionInterface;
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-#[AutoconfigureTag]
-interface NotifierInterface
+interface DynamicNotifierInterface
 {
     /**
      * @throws NotificationExceptionInterface
      */
     public function notify(): void;
+
+    public function supports(): bool;
 }
