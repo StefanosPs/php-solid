@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Handler\WeatherInfoCommandResultsHandler;
-use App\HttpClient\Weather\WeatherHttpClient;
 use App\Service\Mailer\MailerService;
+use App\Service\WeatherInfo\CachedWeatherInfoService;
+use App\Service\WeatherInfo\WeatherInfoServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 #[AsCommand(
     name: 'app:weather-info',
@@ -21,7 +23,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class WeatherInfoCommand extends Command
 {
     public function __construct(
-        private readonly WeatherHttpClient $weatherHttpClient,
+        #[Autowire(service: CachedWeatherInfoService::class)]
+        private readonly WeatherInfoServiceInterface $weatherInfo,
         private readonly MailerService $mailerService,
         private readonly WeatherInfoCommandResultsHandler $resultsHandler,
     ) {
@@ -51,7 +54,7 @@ class WeatherInfoCommand extends Command
 
         $this->mailerService->commandStarted($city);
 
-        $dayWeatherDto = $this->weatherHttpClient->get($city);
+        $dayWeatherDto = $this->weatherInfo->get($city);
         $this->resultsHandler->handle($dayWeatherDto);
 
         $io->info(
